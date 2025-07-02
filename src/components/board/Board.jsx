@@ -32,7 +32,7 @@ export default function Board() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#1c1817",
+        backgroundColor: "#24201f",
       }}
     >
       <Box>

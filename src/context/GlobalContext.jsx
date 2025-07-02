@@ -9,9 +9,10 @@ export function GlobalProvider({ children }) {
     ["", "", ""],
   ]);
   const [isSearchUser,setIsSearchUser] = useState(false)
+  const [isDrawar,setIsDrawar] = useState(false);
 
   return (
-    <GlobalContext.Provider value={{ board, setBoard,isSearchUser,setIsSearchUser}}>
+    <GlobalContext.Provider value={{ board, setBoard,isSearchUser,setIsSearchUser,isDrawar,setIsDrawar}}>
       {children}
     </GlobalContext.Provider>
   );

@@ -66,7 +66,7 @@ export default function Header() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileAnchorEl);
   
-  const {isSearchUser,setIsSearchUser} = React.useContext(GlobalContext)
+  const {isSearchUser,setIsSearchUser,isDrawar,setIsDrawar} = React.useContext(GlobalContext)
   const [searchUserName,setSearchUserName] = React.useState("");
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -141,7 +141,7 @@ export default function Header() {
       <AppBar position="static" sx={{ backgroundColor: "#1a1716" }}>
         <Toolbar>
           <IconButton size="large" edge="start" color="inherit" sx={{ mr: 2 }}>
-            <MenuIcon />
+            <MenuIcon onClick={()=>{setIsDrawar(!isDrawar)}}/>
           </IconButton>
           <Typography
             variant="h6"

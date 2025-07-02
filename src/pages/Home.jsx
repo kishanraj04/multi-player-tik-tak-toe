@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../components/header/header";
 import Board from "../components/board/Board";
 import SearchUserResult from "../components/searchUser/SearchUserResult";
+import LeftDrawra from "../components/leftdrawar/LeftDrawra";
 
 function Home() {
   return (
@@ -13,6 +14,7 @@ function Home() {
       <Board />
 
       <SearchUserResult/>
+      <LeftDrawra/>
     </div>
   );
 }
