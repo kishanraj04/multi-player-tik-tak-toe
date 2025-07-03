@@ -3,6 +3,9 @@ import Header from "../components/header/header";
 import Board from "../components/board/Board";
 import SearchUserResult from "../components/searchUser/SearchUserResult";
 import LeftDrawra from "../components/leftdrawar/LeftDrawra";
+import RightDrawar from "../components/rightDrawar/RightDrawar";
+import Notification from "../components/notification/Notification";
+import { Outlet } from "react-router-dom";
 
 function Home() {
   return (
@@ -15,6 +18,12 @@ function Home() {
 
       <SearchUserResult/>
       <LeftDrawra/>
+      {/* for chat */}
+      <RightDrawar/>
+      {/* notification */}
+      <Notification/>
+
+      <Outlet/>
     </div>
   );
 }

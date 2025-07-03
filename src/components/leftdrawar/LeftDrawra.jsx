@@ -28,7 +28,7 @@ export default function LeftDrawra() {
         p: 2,
       }}
       role="presentation"
-      onClick={() => setIsDrawar(false)}
+    //   onClick={() => setIsDrawar(false)}
     >
       {/* User Info Section */}
       <Box

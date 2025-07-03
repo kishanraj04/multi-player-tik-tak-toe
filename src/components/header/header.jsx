@@ -18,7 +18,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { GlobalContext } from "../../context/GlobalContext";
-
+import { useNavigate } from 'react-router-dom';
 // Search bar container
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -65,11 +65,23 @@ export default function Header() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileAnchorEl);
-  
-  const {isSearchUser,setIsSearchUser,isDrawar,setIsDrawar} = React.useContext(GlobalContext)
-  const [searchUserName,setSearchUserName] = React.useState("");
+  const navigate = useNavigate()
+  const {
+    isSearchUser,
+    setIsSearchUser,
+    isDrawar,
+    setIsDrawar,
+    isRightDrawar,
+    setIsRightDrawar,
+    isNotification,
+    setIsNotification,
+  } = React.useContext(GlobalContext);
+  const [searchUserName, setSearchUserName] = React.useState("");
+  // const navigate = useNavigate()
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
+ 
+
   };
 
   const handleMenuClose = () => {
@@ -93,7 +105,11 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={()=>{
+        handleMenuClose()
+           navigate("/profile");
+      }
+      }>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My Account</MenuItem>
     </Menu>
   );
@@ -109,12 +125,24 @@ export default function Header() {
       <MenuItem>
         <IconButton size="large" color="inherit">
           <Badge badgeContent={4} color="error">
-            <MailIcon />
+            <MailIcon
+              onClick={() => {
+                handleMobileMenuClose();
+                setIsRightDrawar(!isRightDrawar);
+              }}
+            />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p  onClick={() => {
+                handleMobileMenuClose();
+                setIsRightDrawar(!isRightDrawar);
+              }}>Messages</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem
+        onClick={() => {
+          setIsNotification(!isNotification);
+        }}
+      >
         <IconButton size="large" color="inherit">
           <Badge badgeContent={17} color="error">
             <NotificationsIcon />
@@ -131,17 +159,21 @@ export default function Header() {
     </Menu>
   );
 
-  const handleSearchUser = (username)=>{
-    setIsSearchUser(true)
-    console.log(username,isSearchUser);
-  }
+  const handleSearchUser = (username) => {
+    setIsSearchUser(true);
+    console.log(username, isSearchUser);
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: "#1a1716" }}>
         <Toolbar>
           <IconButton size="large" edge="start" color="inherit" sx={{ mr: 2 }}>
-            <MenuIcon onClick={()=>{setIsDrawar(!isDrawar)}}/>
+            <MenuIcon
+              onClick={() => {
+                setIsDrawar(!isDrawar);
+              }}
+            />
           </IconButton>
           <Typography
             variant="h6"
@@ -155,23 +187,32 @@ export default function Header() {
             <StyledInputBase
               placeholder="Search User"
               value={searchUserName}
-              onChange={(e)=>setSearchUserName(e.target.value)}
+              onChange={(e) => setSearchUserName(e.target.value)}
               inputProps={{ "aria-label": "search" }}
             />
             <SearchIconWrapper>
-              <SearchIcon  onClick={()=>handleSearchUser(searchUserName)}/>
+              <SearchIcon onClick={() => handleSearchUser(searchUserName)} />
             </SearchIconWrapper>
           </Search>
 
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton size="large" color="inherit">
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={() => {
+                handleMobileMenuClose();
+                setIsRightDrawar(!isRightDrawar);
+              }}
+            >
               <Badge badgeContent={4} color="error">
                 <MailIcon />
               </Badge>
             </IconButton>
-            <IconButton size="large" color="inherit">
+            <IconButton size="large" color="inherit" onClick={()=>{
+        setIsNotification(!isNotification)
+      }}>
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
               </Badge>
