@@ -5,12 +5,10 @@ import SearchUserResult from "../components/searchUser/SearchUserResult";
 import LeftDrawra from "../components/leftdrawar/LeftDrawra";
 import RightDrawar from "../components/rightDrawar/RightDrawar";
 import Notification from "../components/notification/Notification";
-import { Outlet } from "react-router-dom";
 
 function Home() {
   return (
     <div
-      className="no-scroll"
       style={{ backgroundColor: "black", height: "100vh", overflow: "auto" , scrollbarWidth: "none" }}
     >
       <Header />
@@ -22,8 +20,6 @@ function Home() {
       <RightDrawar/>
       {/* notification */}
       <Notification/>
-
-      <Outlet/>
     </div>
   );
 }

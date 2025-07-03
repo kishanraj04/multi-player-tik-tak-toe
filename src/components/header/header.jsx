@@ -110,7 +110,10 @@ export default function Header() {
            navigate("/profile");
       }
       }>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My Account</MenuItem>
+      <MenuItem onClick={()=>{
+        handleMenuClose()
+        navigate("/myaccount")
+      }}>My Account</MenuItem>
     </Menu>
   );
 

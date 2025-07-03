@@ -15,6 +15,7 @@ const Cell = styled(Box)(({ theme }) => ({
   fontWeight: "bold",
   boxSizing: "border-box",
   backgroundColor: "#fff",
+  overflow: "auto" , scrollbarWidth: "none"
 }));
 
 export default function Board() {
@@ -33,6 +34,7 @@ export default function Board() {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#24201f",
+        overflow: "auto" , scrollbarWidth: "none"
       }}
     >
       <Box>
