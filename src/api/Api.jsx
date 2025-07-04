@@ -12,11 +12,18 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
+    loginUser:builder.mutation({
+      query:(data)=>({
+        url:"user/login",
+        method:"POST",
+        body:data
+      })
+    })
   }),
 });
 
 // Export the auto-generated hook
-export const { useSignUpUserMutation } = apiSlice;
+export const { useSignUpUserMutation,useLoginUserMutation} = apiSlice;
 
 // Export the reducer separately (for store setup)
 export const userRed = apiSlice.reducer;

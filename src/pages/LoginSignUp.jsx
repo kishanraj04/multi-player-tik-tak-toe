@@ -9,9 +9,10 @@ import {
   Stack,
   Avatar,
 } from "@mui/material";
-import { useSignUpUserMutation } from "../api/Api"; // Assuming RTK query is set
+import { useLoginUserMutation, useSignUpUserMutation } from "../api/Api"; // Assuming RTK query is set
 import { toast } from "react-toastify";
 import Loader from "../components/loading/Loader";
+
 
 const inputStyle = {
   input: {
@@ -36,7 +37,8 @@ const LoginSignUp = () => {
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [signupUserApi, signuUpResp] = useSignUpUserMutation();
-  console.log(signuUpResp);
+  const [loginUserApi,loginUserResp] = useLoginUserMutation()
+
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -61,17 +63,27 @@ const LoginSignUp = () => {
       form.append("avatar", formData.Avatar);
       try {
         const signupresp = await signupUserApi(form).unwrap();
-        console.log(signupresp);
+        console.log(signupresp?.isError);
+        if(signupresp?.isError){
+          toast.error("failed")
+        }
         if (signupresp?.success) {
           setFormData({ name: "", password: "", Avatar: null});
           toast.success("user created");
+          
         }else{
           toast.error("user name exist");
         }
       } catch (err) {
-        console.error(err);
+        if(err){
+          toast.error("failed to create")
+        }
       }
     } else {
+      const loginresp = await loginUserApi({
+        name: formData.name,
+        password: formData.password,
+      })
       console.log("Login:", {
         name: formData.name,
         password: formData.password,
