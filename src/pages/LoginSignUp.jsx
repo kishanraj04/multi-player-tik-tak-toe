@@ -12,6 +12,9 @@ import {
 import { useLoginUserMutation, useSignUpUserMutation } from "../api/Api"; // Assuming RTK query is set
 import { toast } from "react-toastify";
 import Loader from "../components/loading/Loader";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLoginUser } from "../store/userSlice";
 
 
 const inputStyle = {
@@ -35,9 +38,11 @@ const LoginSignUp = () => {
     password: "",
     Avatar: null,
   });
+  const navigate = useNavigate()
   const [imagePreview, setImagePreview] = useState(null);
   const [signupUserApi, signuUpResp] = useSignUpUserMutation();
   const [loginUserApi,loginUserResp] = useLoginUserMutation()
+  const dispatch = useDispatch()
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -84,10 +89,16 @@ const LoginSignUp = () => {
         name: formData.name,
         password: formData.password,
       })
-      console.log("Login:", {
-        name: formData.name,
-        password: formData.password,
-      });
+      if(!loginresp?.data?.success)
+      {
+        toast.error("invalid credentials")
+      }
+      if(loginresp?.data?.success){
+        toast.success("user login")
+        navigate("/home")
+      }
+      console.log(loginresp);
+      dispatch(setLoginUser(loginresp?.data?.user))
     }
   };
 

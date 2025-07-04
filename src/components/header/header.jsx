@@ -9,6 +9,7 @@ import {
   Badge,
   MenuItem,
   Menu,
+  Avatar,
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -19,6 +20,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { GlobalContext } from "../../context/GlobalContext";
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
 // Search bar container
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -77,11 +79,11 @@ export default function Header() {
     setIsNotification,
   } = React.useContext(GlobalContext);
   const [searchUserName, setSearchUserName] = React.useState("");
-  // const navigate = useNavigate()
+  
+  const {name,avatar} = useSelector((state)=>state.loginUser)
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
- 
-
   };
 
   const handleMenuClose = () => {
@@ -226,7 +228,7 @@ export default function Header() {
               color="inherit"
               onClick={handleProfileMenuOpen}
             >
-              <AccountCircle />
+              <Avatar alt="Remy Sharp" src={avatar} />
             </IconButton>
           </Box>
 
