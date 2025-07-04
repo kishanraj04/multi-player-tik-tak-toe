@@ -15,20 +15,22 @@ import { store } from './store/store.jsx'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { ProtectedRoute } from './components/protectedRoute/ProtectedRoute.jsx'
+import { ValidateUser } from './components/protectedRoute/ValidateUser.jsx'
+import AuthLoader from './components/protectedRoute/AuthLoader.jsx'
 
 const route = createBrowserRouter([
-  { path: "/", element: <LoginSignUp /> },
+  { path: "/", element: <ValidateUser><LoginSignUp /> </ValidateUser>},
   { 
     path: "/home", 
-    element: <ProtectedRoute><Home /></ProtectedRoute> 
+    element: <AuthLoader><Home /></AuthLoader> 
   },
   { 
     path: "/profile", 
-    element: <ProtectedRoute><Profile /></ProtectedRoute> 
+    element: <AuthLoader><Profile /></AuthLoader> 
   },
   { 
     path: "/myaccount", 
-    element: <ProtectedRoute><MyAccount /></ProtectedRoute> 
+    element: <AuthLoader><MyAccount /></AuthLoader> 
   },
 ])
 
@@ -37,9 +39,9 @@ createRoot(document.getElementById('root')).render(
     <Provider store={store}>
        
     <GlobalProvider>
-     
+         
          <RouterProvider router={route} />
-  
+        
       <ToastContainer
         position="top-right"
         autoClose={1000}

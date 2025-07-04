@@ -19,12 +19,19 @@ export const apiSlice = createApi({
         body:data,
          credentials: "include"
       })
+    }),
+    directLogin:builder.query({
+      query:()=>({
+        url:"/direct-login",
+        credentials:"include",
+        method:"GET"
+      })
     })
   }),
 });
 
 // Export the auto-generated hook
-export const { useSignUpUserMutation,useLoginUserMutation} = apiSlice;
+export const { useSignUpUserMutation,useLoginUserMutation,useDirectLoginQuery} = apiSlice;
 
 // Export the reducer separately (for store setup)
 export const userRed = apiSlice.reducer;
