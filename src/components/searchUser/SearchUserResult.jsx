@@ -9,10 +9,15 @@ import Paper from "@mui/material/Paper";
 import Draggable from "react-draggable";
 import { GlobalContext } from "../../context/GlobalContext";
 import { Avatar, IconButton } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
+import { useLazySearchUserQuery } from "../../api/Api";
+import { useSelector } from "react-redux";
+import { useContext } from "react";
 
 function PaperComponent(props) {
   const nodeRef = React.useRef(null);
+  
+
   return (
     <Draggable
       nodeRef={nodeRef}
@@ -31,6 +36,13 @@ export default function SearchUserResult() {
     setOpen(true);
   };
 
+  const { searchUserName } = React.useContext(GlobalContext);
+  const searchQuery = useSelector(
+    (state) => state.api.queries[`searchUser("${searchUserName}")`]
+  );
+
+  
+
   const handleClose = () => {
     setIsSearchUser(false);
   };
@@ -42,84 +54,29 @@ export default function SearchUserResult() {
         onClose={handleClose}
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
-        sx={{width:"100%"}}
+        sx={{ width: "100%" }}
       >
-        <DialogTitle
-          style={{
-            cursor: "move",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width:"300px"
-          }}
-          
-          id="draggable-dialog-title"
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px"}}>
-            <Avatar src={''} />
-            <span>{"kishan"}</span>
-          </div>
-          <IconButton >
-            <AddIcon/>
-          </IconButton>
-        </DialogTitle>
-
-        <DialogTitle
-          style={{
-            cursor: "move",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-             width:"300px"
-          }}
-          id="draggable-dialog-title"
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <Avatar src={''} />
-            <span>{"kishan"}</span>
-          </div>
-          <IconButton >
-            <AddIcon/>
-          </IconButton>
-        </DialogTitle>
-
-        <DialogTitle
-          style={{
-            cursor: "move",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-               width:"300px"
-          }}
-          id="draggable-dialog-title"
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <Avatar src={''} />
-            <span>{"kishan"}</span>
-          </div>
-          <IconButton>
-            <AddIcon/>
-          </IconButton>
-        </DialogTitle>
-
-        <DialogTitle
-          style={{
-            cursor: "move",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-              width:"300px"
-          }}
-          id="draggable-dialog-title"
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <Avatar src={''} />
-            <span>{"kishan"}</span>
-          </div>
-          <IconButton>
-            <AddIcon/>
-          </IconButton>
-        </DialogTitle>
+        {
+          searchQuery?.data?.friends?.map(({avatar,name})=><DialogTitle
+            style={{
+              cursor: "move",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "300px",
+            }}
+            id="draggable-dialog-title"
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Avatar src={avatar} />
+              <span>{name
+                }</span>
+            </div>
+            <IconButton>
+              <AddIcon />
+            </IconButton>
+          </DialogTitle>)
+        }
       </Dialog>
     </React.Fragment>
   );

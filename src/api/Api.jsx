@@ -26,12 +26,19 @@ export const apiSlice = createApi({
         credentials:"include",
         method:"GET"
       })
+    }),
+    searchUser:builder.query({
+      query:(name)=>({
+        url:`/search/${name}`,
+        credentials:"include",
+        method:"GET"
+      })
     })
   }),
 });
 
 // Export the auto-generated hook
-export const { useSignUpUserMutation,useLoginUserMutation,useDirectLoginQuery} = apiSlice;
+export const { useSignUpUserMutation,useLoginUserMutation,useDirectLoginQuery,useLazySearchUserQuery} = apiSlice;
 
 // Export the reducer separately (for store setup)
 export const userRed = apiSlice.reducer;

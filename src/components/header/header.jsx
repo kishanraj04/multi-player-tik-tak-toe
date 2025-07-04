@@ -21,6 +21,7 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import { GlobalContext } from "../../context/GlobalContext";
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
+import { useLazySearchUserQuery } from "../../api/Api";
 // Search bar container
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -77,11 +78,12 @@ export default function Header() {
     setIsRightDrawar,
     isNotification,
     setIsNotification,
+    searchUserName, setSearchUserName
   } = React.useContext(GlobalContext);
-  const [searchUserName, setSearchUserName] = React.useState("");
+  
   
   const {name,avatar} = useSelector((state)=>state.loginUser)
-
+  const [searchUser,resp] =  useLazySearchUserQuery()
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -157,16 +159,18 @@ export default function Header() {
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton size="large" color="inherit">
-          <AccountCircle />
+            <Avatar alt="Remy Sharp" src={avatar} />
         </IconButton>
         <p>Profile</p>
       </MenuItem>
     </Menu>
   );
 
-  const handleSearchUser = (username) => {
+  const handleSearchUser = async(username) => {
     setIsSearchUser(true);
-    console.log(username, isSearchUser);
+    const resp = await searchUser(username)
+    
+    
   };
 
   return (
