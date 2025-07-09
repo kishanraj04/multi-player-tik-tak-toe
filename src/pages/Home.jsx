@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import Header from "../components/header/header";
 import Board from "../components/board/Board";
 import SearchUserResult from "../components/searchUser/SearchUserResult";
 import LeftDrawra from "../components/leftdrawar/LeftDrawra";
 import RightDrawar from "../components/rightDrawar/RightDrawar";
 import Notification from "../components/notification/Notification";
+import { getSocket } from "../context/SocketProvider";
 
 function Home() {
+
+  const socket = getSocket()
+  
   return (
     <div
       style={{ backgroundColor: "black", height: "100vh", overflow: "auto" , scrollbarWidth: "none" }}

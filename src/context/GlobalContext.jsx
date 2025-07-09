@@ -1,7 +1,6 @@
-import { createContext, useState } from "react";
-
-export 
-t GlobalContext = createContext();
+import { createContext, useMemo, useState } from "react";
+import io from 'socket.io-client'
+export const GlobalContext = createContext();
 
 export function GlobalProvider({ children }) {
   const [board, setBoard] = useState([
@@ -9,6 +8,10 @@ export function GlobalProvider({ children }) {
     ["", "", ""],
     ["", "", ""],
   ]);
+
+ 
+
+
   const [isSearchUser,setIsSearchUser] = useState(false)
   const [isDrawar,setIsDrawar] = useState(false);
   const [isRightDrawar,setIsRightDrawar] = useState(false)

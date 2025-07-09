@@ -83,6 +83,7 @@ export default function Header() {
   
   
   const {name,avatar} = useSelector((state)=>state.loginUser)
+  
   const [searchUser,resp] =  useLazySearchUserQuery()
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);

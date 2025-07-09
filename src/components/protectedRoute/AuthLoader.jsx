@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useDirectLoginQuery } from "../../api/Api";
-import { setLoginUser } from "../../store/userSlice";
+import { setLoginUser, setToken } from "../../store/userSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PageSkeleton from "../skeleton/PageSkeleton";
@@ -15,6 +15,7 @@ const AuthLoader = ({ children }) => {
   useEffect(() => {
     if (data?.loginUser) {
       dispatch(setLoginUser(data.loginUser));
+      dispatch(setToken(data))
     }
   }, [data, dispatch]);
 

@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import { GlobalContext } from '../../context/GlobalContext';
 import { color } from '@mui/system';
+import { useSelector } from 'react-redux';
+import { getSocket } from '../../context/SocketProvider';
 
 const style = {
   position: 'absolute',
@@ -31,20 +33,16 @@ const style = {
 
 export default function Notification() {
   const { isNotification, setIsNotification } = React.useContext(GlobalContext);
-
-  // Simulated multiple user requests
-  const friendRequests = [
-    { id: 1, name: 'John Doe', avatar: 'https://i.pravatar.cc/150?img=3' },
-    { id: 2, name: 'Jane Smith', avatar: 'https://i.pravatar.cc/150?img=5' },
-    { id: 3, name: 'Michael Lee', avatar: 'https://i.pravatar.cc/150?img=6' },
-  ];
+  const {userName,avatar,friendRequest} = useSelector((state)=>state.loginUser)
+  // console.log(friendRequest);
+  const {socket} = getSocket();
 
   const handleClose = () => {
     setIsNotification(false);
   };
-
-  const handleAccept = (name) => {
-    console.log(`Accepted ${name}`);
+  // console.log(friendRequest);
+  const handleAccept = (friend) => {
+    socket.emit("ACCEPT_FRIEND_REQUEST",{you:{name:userName,avatar},oponent:friend})
   };
 
   const handleReject = (name) => {
@@ -68,32 +66,32 @@ export default function Notification() {
             Friend Requests
           </Typography>
 
-          {friendRequests.map((user, index) => (
-            <Box key={user.id}>
+          {friendRequest?.map((user, index) => (
+            <Box key={user._id}>
               <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
                 <Stack direction="row" spacing={2} alignItems="center">
-                  <Avatar alt={user.name} src={user.avatar} />
-                  <Typography>{user.name}</Typography>
+                  <Avatar alt={user?.name} src={user?.avatar} />
+                  <Typography>{user?.name}</Typography>
                 </Stack>
 
                 <Stack direction="row" spacing={1}>
                   <Button
                     variant="contained"
                     color="success"
-                    onClick={() => handleAccept(user.name)}
+                    onClick={() => handleAccept(user)}
                   >
                     Accept
                   </Button>
                   <Button
                     variant="outlined"
                     color="error"
-                    onClick={() => handleReject(user.name)}
+                    onClick={() => handleReject(user?.name)}
                   >
                     Reject
                   </Button>
                 </Stack>
               </Stack>
-              {index < friendRequests.length - 1 && <Divider />}
+              {index < friendRequest?.length - 1 && <Divider />}
             </Box>
           ))}
         </Box>
