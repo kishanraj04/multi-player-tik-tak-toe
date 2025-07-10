@@ -15,6 +15,7 @@ import { color } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSocket } from '../../context/SocketProvider';
 import { setFriendReqEmpty, setFriendRequest } from '../../store/userSlice';
+import { useEffect } from 'react';
 
 const style = {
   position: 'absolute',
@@ -42,6 +43,8 @@ export default function Notification() {
     setIsNotification(false);
   };
   // console.log(friendRequest);
+
+
   const handleAccept = (friend) => {
     socket.emit("ACCEPT_FRIEND_REQUEST",{you:{name:userName,avatar},oponent:friend})
     dispatch(setFriendReqEmpty())

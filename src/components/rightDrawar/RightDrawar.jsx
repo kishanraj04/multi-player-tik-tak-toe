@@ -11,7 +11,16 @@ import { GlobalContext } from '../../context/GlobalContext';
 
 export default function RightDrawar() {
   const { isRightDrawar, setIsRightDrawar } = React.useContext(GlobalContext);
+  const [msg,setMsg] = React.useState([{
+    sender:"",
+    receiver:"",
+    message:""
+  }]);
+  const inputRef = React.useRef("");
 
+  const handleSendMessage = (e)=>{
+    console.log(inputRef?.current?.value);
+  }
   const DrawerContent = (
     <Box
       sx={{
@@ -86,12 +95,13 @@ export default function RightDrawar() {
           fullWidth
           variant="outlined"
           placeholder="Type a message..."
+          inputRef={inputRef}
           InputProps={{
             sx: { backgroundColor: 'white', borderRadius: 1 },
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton edge="end" color="primary">
-                  <SendIcon />
+                  <SendIcon onClick={(e)=>handleSendMessage(e)}/>
                 </IconButton>
               </InputAdornment>
             ),

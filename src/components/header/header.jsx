@@ -82,7 +82,7 @@ export default function Header() {
   } = React.useContext(GlobalContext);
   
   
-  const {name,avatar} = useSelector((state)=>state.loginUser)
+  const {name,avatar,friendRequest} = useSelector((state)=>state.loginUser)
   
   const [searchUser,resp] =  useLazySearchUserQuery()
   const handleProfileMenuOpen = (event) => {
@@ -152,7 +152,7 @@ export default function Header() {
         }}
       >
         <IconButton size="large" color="inherit">
-          <Badge badgeContent={17} color="error">
+          <Badge badgeContent={friendRequest?.length} color="error">
             <NotificationsIcon />
           </Badge>
         </IconButton>

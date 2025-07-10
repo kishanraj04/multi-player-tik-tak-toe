@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getActiveUsers } from '../../helper/helper';
 import { useEffect } from 'react';
 import {toast} from 'react-toastify'
-import { setFriendRequest } from '../../store/userSlice';
+import { setFriendReqEmpty, setFriendRequest } from '../../store/userSlice';
 
 export default function LeftDrawra() {
   const { isDrawar, setIsDrawar } = React.useContext(GlobalContext);
@@ -35,23 +35,18 @@ export default function LeftDrawra() {
 
   const handleIsPlaying = (data)=>{
     setIsLoginUserPlaying(data)
-  }
-
-  const handleGetWinner = (data)=>{
-    console.log(data);
-    console.log(activeUsers);
+    dispatch(setFriendReqEmpty())
   }
 
   socket.on("ACTIVEUSERS", handleActiveUsers);
   socket.on("GET_FRIEND_REQ",getFrindRequest);
   socket.on("IS_PLAYING",handleIsPlaying);
-  socket.on("GET_WINNER",handleGetWinner)
   return () => {
     socket.off("ACTIVEUSERS", handleActiveUsers);
   };
 }, [socket]);
 
-  console.log(isLoginUserPlaying);
+
   // ✅ Remove self from list
   const visibleUsers = getActiveUsers(activeUsers, currentUserName);
   
