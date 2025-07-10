@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { getSocket } from "../../context/SocketProvider";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { setOponentPlayer } from "../../store/userSlice";
 
 const Cell = styled(Box)(({ theme }) => ({
   width: "100px",
@@ -34,13 +35,14 @@ export default function Board() {
   const [playerRole, setPlayerRole] = useState("");
 
   const { socket } = getSocket();
+  const dispatch = useDispatch();
   const { userName } = useSelector((state) => state?.loginUser);
 
   useEffect(() => {
     if (!socket) return;
 
     const handleRoom = (data) => {
-      
+      const oponentPlayer = data?.player1?.name==userName?data?.player2:data?.player1
       setRoom({
         board: data?.board || [
           ["", "", ""],
@@ -52,6 +54,8 @@ export default function Board() {
         currentTurn: data?.currentTurn,
         winner: "",
       });
+
+      dispatch(setOponentPlayer(oponentPlayer))
       // Determine player's role
       if (data?.player1?.name === userName) setPlayerRole("player1");
       else if (data?.player2?.name === userName) setPlayerRole("player2");
@@ -67,7 +71,7 @@ export default function Board() {
 
     const getWinnerHandler = (data) => {
       toast?.success(`${data?.winner?.name} wins`);
-      
+      dispatch(setOponentPlayer(""))
       setRoom({
         board: [
           ["", "", ""],
@@ -81,10 +85,11 @@ export default function Board() {
       });
     };
 
+     
+
     socket.on("ACCEPT_FRIEND_REQUEST", handleRoom);
     socket.on("PLAYER_MOVE", handlePlayerMove);
     socket.on("GET_WINNER", getWinnerHandler);
-
     return () => {
       socket.off("ACCEPT_FRIEND_REQUEST", handleRoom);
       socket.off("PLAYER_MOVE", handlePlayerMove);
@@ -92,20 +97,7 @@ export default function Board() {
     };
   }, [socket, userName]);
 
-  //   useEffect(() => {
-  //   if (!socket) return;
-
-  //   const getWinnerHandler = (data) => {
-  //     console.log("🔥 GET_WINNER received:", data);
-  //     // handle winner state here if needed
-  //   };
-
-  //   socket.on("GET_WINNER", getWinnerHandler);
-
-  //   return () => {
-  //     socket.off("GET_WINNER", getWinnerHandler);
-  //   };
-  // }, [socket?.id]); // ✅ Use socket.id to ensure the hook is stable across renders
+ 
 
   const handleBoardClick = (i, j) => {
     const board = room.board;
@@ -150,6 +142,10 @@ export default function Board() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          scrollbarWidth: "none", 
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari
+            },
         }}
       >
         Connecting to game server...
@@ -171,6 +167,10 @@ export default function Board() {
             flexDirection: "column",
             gap: 3,
             pt: 4,
+            scrollbarWidth: "none", 
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari
+            },
           }}
         >
           {/* Player Info */}
@@ -180,6 +180,10 @@ export default function Board() {
               gap: 4,
               justifyContent: "center",
               alignItems: "center",
+              scrollbarWidth: "none", 
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari
+            },
             }}
           >
             {["player1", "player2"].map((pKey) => {
@@ -196,6 +200,10 @@ export default function Board() {
                     py: 1,
                     borderRadius: "10px",
                     boxShadow: isCurrent ? "0 0 10px #fdd835" : "none",
+                    scrollbarWidth: "none", 
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari
+            },
                   }}
                 >
                   <Avatar src={room[pKey].avatar} alt={room[pKey].name} />
@@ -208,7 +216,10 @@ export default function Board() {
           </Box>
 
           {/* Game Board */}
-          <Box>
+          <Box sx={{scrollbarWidth: "none", 
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari
+            },}}>
             {room.board.map((row, i) => (
               <Box key={i} sx={{ display: "flex" }}>
                 {row.map((val, j) => (
@@ -230,6 +241,10 @@ export default function Board() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            scrollbarWidth: "none", 
+            "&::-webkit-scrollbar": {
+              display: "none", // Chrome, Safari
+            },
           }}
         >
           <Typography sx={{ color: "white" }}>Request Player</Typography>

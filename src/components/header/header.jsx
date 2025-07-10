@@ -223,7 +223,7 @@ export default function Header() {
             <IconButton size="large" color="inherit" onClick={()=>{
         setIsNotification(!isNotification)
       }}>
-              <Badge badgeContent={17} color="error">
+              <Badge badgeContent={friendRequest?.length} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
