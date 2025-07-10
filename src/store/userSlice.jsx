@@ -5,6 +5,7 @@ const initialState = {
   avatar: "",
   token: "",
   friendRequest: [],
+  isPlaying:false
 };
 
 const userSlice = createSlice({
@@ -26,9 +27,15 @@ const userSlice = createSlice({
         state.friendRequest.push(action.payload);
       }
     },
+    setIsPlaying:(state,action)=>{
+      state.isPlaying = action.payload
+    },
+    setFriendReqEmpty:(state,action)=>{
+      state.friendRequest = []
+    }
   },
 });
 
-export const { setLoginUser, setToken, setFriendRequest } = userSlice?.actions;
+export const { setLoginUser, setToken, setFriendRequest ,setIsPlaying,setFriendReqEmpty} = userSlice?.actions;
 
 export default userSlice?.reducer;

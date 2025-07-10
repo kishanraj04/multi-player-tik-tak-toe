@@ -12,8 +12,9 @@ import {
 } from '@mui/material';
 import { GlobalContext } from '../../context/GlobalContext';
 import { color } from '@mui/system';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getSocket } from '../../context/SocketProvider';
+import { setFriendReqEmpty, setFriendRequest } from '../../store/userSlice';
 
 const style = {
   position: 'absolute',
@@ -36,13 +37,14 @@ export default function Notification() {
   const {userName,avatar,friendRequest} = useSelector((state)=>state.loginUser)
   // console.log(friendRequest);
   const {socket} = getSocket();
-
+  const dispatch = useDispatch()
   const handleClose = () => {
     setIsNotification(false);
   };
   // console.log(friendRequest);
   const handleAccept = (friend) => {
     socket.emit("ACCEPT_FRIEND_REQUEST",{you:{name:userName,avatar},oponent:friend})
+    dispatch(setFriendReqEmpty())
   };
 
   const handleReject = (name) => {

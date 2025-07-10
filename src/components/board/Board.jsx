@@ -40,6 +40,7 @@ export default function Board() {
     if (!socket) return;
 
     const handleRoom = (data) => {
+      console.log(data);
       setRoom({
         board: data?.board || [
           ["", "", ""],
@@ -65,8 +66,8 @@ export default function Board() {
     };
 
     const getWinnerHandler = (data) => {
-      console.log(data);
       toast?.success(`${data?.winner?.name} wins`);
+      console.log(data);
       setRoom({
         board: [
           ["", "", ""],
@@ -139,6 +140,7 @@ export default function Board() {
     });
   };
 
+  console.log(room);
   if (!socket) {
     return (
       <Box

@@ -16,6 +16,7 @@ export default function LeftDrawra() {
   const [searchInput, setSearchInput] = React.useState('');
   const [activeUsers, setActiveUsers] = React.useState([]);
   const { userName: currentUserName } = useSelector((state) => state?.loginUser || {});
+  const [isLoginUserPlaying,setIsLoginUserPlaying] = React.useState(false);
   const { socket } = getSocket();
   const dispatch = useDispatch()
   // 🔄 Listen for active user updates
@@ -32,14 +33,25 @@ export default function LeftDrawra() {
     dispatch(setFriendRequest(data?.sender))
   }
 
+  const handleIsPlaying = (data)=>{
+    setIsLoginUserPlaying(data)
+  }
+
+  const handleGetWinner = (data)=>{
+    console.log(data);
+    console.log(activeUsers);
+  }
+
   socket.on("ACTIVEUSERS", handleActiveUsers);
-  socket.on("GET_FRIEND_REQ",getFrindRequest)
+  socket.on("GET_FRIEND_REQ",getFrindRequest);
+  socket.on("IS_PLAYING",handleIsPlaying);
+  socket.on("GET_WINNER",handleGetWinner)
   return () => {
     socket.off("ACTIVEUSERS", handleActiveUsers);
   };
 }, [socket]);
 
-
+  console.log(isLoginUserPlaying);
   // ✅ Remove self from list
   const visibleUsers = getActiveUsers(activeUsers, currentUserName);
   
@@ -97,6 +109,10 @@ export default function LeftDrawra() {
                 size="small"
                 sx={{ fontSize: '10px', padding: '4px 10px', textTransform: 'none' }}
                 onClick={() => {
+                  if(isLoginUserPlaying){
+                    toast.error("You Are In Game")
+                    return;
+                  }
                   socket.emit("FRIEND_REQUEST",{name,avatar,socketId})
                   toast.success("Request Send")
                 }}
