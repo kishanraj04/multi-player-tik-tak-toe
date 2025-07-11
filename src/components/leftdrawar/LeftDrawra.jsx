@@ -9,14 +9,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getActiveUsers } from '../../helper/helper';
 import { useEffect } from 'react';
 import {toast} from 'react-toastify'
-import { setFriendReqEmpty, setFriendRequest } from '../../store/userSlice';
+import { setFriendReqEmpty, setFriendRequest, setIsPlaying } from '../../store/userSlice';
 
 export default function LeftDrawra() {
   const { isDrawar, setIsDrawar } = React.useContext(GlobalContext);
   const [searchInput, setSearchInput] = React.useState('');
   const [activeUsers, setActiveUsers] = React.useState([]);
   const { userName: currentUserName } = useSelector((state) => state?.loginUser || {});
-  const [isLoginUserPlaying,setIsLoginUserPlaying] = React.useState(false);
+   const {isPlaying:isLoginUserPlaying} = useSelector((state)=>state?.loginUser)
   const { socket } = getSocket();
   const dispatch = useDispatch()
   // 🔄 Listen for active user updates
@@ -34,7 +34,7 @@ export default function LeftDrawra() {
   }
 
   const handleIsPlaying = (data)=>{
-    setIsLoginUserPlaying(data)
+    dispatch(setIsPlaying(data))
     dispatch(setFriendReqEmpty())
   }
 

@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import { getSocket } from "../../context/SocketProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { setOponentPlayer } from "../../store/userSlice";
+import { setIsPlaying, setOponentPlayer } from "../../store/userSlice";
 
 const Cell = styled(Box)(({ theme }) => ({
   width: "100px",
@@ -83,6 +83,7 @@ export default function Board() {
         currentTurn: "",
         winner: "",
       });
+      dispatch(setIsPlaying(false))
     };
 
      
