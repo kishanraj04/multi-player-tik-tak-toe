@@ -167,10 +167,20 @@ export default function Header() {
       >
         <IconButton size="large" color="inherit">
           <Badge badgeContent={friendRequest?.length} color="error">
-            <NotificationsIcon onClose={handleMobileMenuClose}/>
+            <NotificationsIcon
+              onClose={() => {
+                handleMobileMenuClose();
+              }}
+            />
           </Badge>
         </IconButton>
-        <p onClick={handleMobileMenuClose}>Notifications</p>
+        <p
+          onClick={() => {
+            handleMobileMenuClose();
+          }}
+        >
+          Notifications
+        </p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton size="large" color="inherit">
@@ -240,7 +250,11 @@ export default function Header() {
               }}
             >
               <Badge badgeContent={friendRequest?.length} color="error">
-                <NotificationsIcon onClick={()=>alert()}/>
+                <NotificationsIcon
+                  onClick={() => {
+                    handleMobileMenuClose();
+                  }}
+                />
               </Badge>
             </IconButton>
             <IconButton

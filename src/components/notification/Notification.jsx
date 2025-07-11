@@ -46,6 +46,7 @@ export default function Notification() {
 
   const handleAccept = (friend) => {
     socket.emit("ACCEPT_FRIEND_REQUEST",{you:{name:userName,avatar},oponent:friend})
+    setIsNotification(false)
     dispatch(setFriendReqEmpty())
   };
 
