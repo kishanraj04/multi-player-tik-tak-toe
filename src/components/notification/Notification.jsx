@@ -42,7 +42,6 @@ export default function Notification() {
   const handleClose = () => {
     setIsNotification(false);
   };
-  // console.log(friendRequest);
 
 
   const handleAccept = (friend) => {

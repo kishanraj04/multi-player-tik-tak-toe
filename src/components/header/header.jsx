@@ -19,7 +19,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { GlobalContext } from "../../context/GlobalContext";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useLazySearchUserQuery } from "../../api/Api";
 // Search bar container
@@ -64,11 +64,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+
   const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileAnchorEl);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     isSearchUser,
     setIsSearchUser,
@@ -78,13 +79,15 @@ export default function Header() {
     setIsRightDrawar,
     isNotification,
     setIsNotification,
-    searchUserName, setSearchUserName
+    searchUserName,
+    setSearchUserName,
   } = React.useContext(GlobalContext);
-  
-  
-  const {name,avatar,friendRequest} = useSelector((state)=>state.loginUser)
-  
-  const [searchUser,resp] =  useLazySearchUserQuery()
+
+  const { name, avatar, friendRequest } = useSelector(
+    (state) => state.loginUser
+  );
+
+  const [searchUser, resp] = useLazySearchUserQuery();
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -110,15 +113,22 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={()=>{
-        handleMenuClose()
-           navigate("/profile");
-      }
-      }>Profile</MenuItem>
-      <MenuItem onClick={()=>{
-        handleMenuClose()
-        navigate("/myaccount")
-      }}>My Account</MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
+          navigate("/profile");
+        }}
+      >
+        Profile
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
+          navigate("/myaccount");
+        }}
+      >
+        My Account
+      </MenuItem>
     </Menu>
   );
 
@@ -141,10 +151,14 @@ export default function Header() {
             />
           </Badge>
         </IconButton>
-        <p  onClick={() => {
-                handleMobileMenuClose();
-                setIsRightDrawar(!isRightDrawar);
-              }}>Messages</p>
+        <p
+          onClick={() => {
+            handleMobileMenuClose();
+            setIsRightDrawar(!isRightDrawar);
+          }}
+        >
+          Messages
+        </p>
       </MenuItem>
       <MenuItem
         onClick={() => {
@@ -153,25 +167,23 @@ export default function Header() {
       >
         <IconButton size="large" color="inherit">
           <Badge badgeContent={friendRequest?.length} color="error">
-            <NotificationsIcon />
+            <NotificationsIcon onClose={handleMobileMenuClose}/>
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+        <p onClick={handleMobileMenuClose}>Notifications</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton size="large" color="inherit">
-            <Avatar alt="Remy Sharp" src={avatar} />
+          <Avatar alt="Remy Sharp" src={avatar} />
         </IconButton>
         <p>Profile</p>
       </MenuItem>
     </Menu>
   );
 
-  const handleSearchUser = async(username) => {
+  const handleSearchUser = async (username) => {
     setIsSearchUser(true);
-    const resp = await searchUser(username)
-    
-    
+    const resp = await searchUser(username);
   };
 
   return (
@@ -220,11 +232,15 @@ export default function Header() {
                 <MailIcon />
               </Badge>
             </IconButton>
-            <IconButton size="large" color="inherit" onClick={()=>{
-        setIsNotification(!isNotification)
-      }}>
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={() => {
+                setIsNotification(!isNotification);
+              }}
+            >
               <Badge badgeContent={friendRequest?.length} color="error">
-                <NotificationsIcon />
+                <NotificationsIcon onClick={()=>alert()}/>
               </Badge>
             </IconButton>
             <IconButton
