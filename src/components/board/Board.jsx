@@ -68,6 +68,7 @@ export default function Board() {
         currentTurn: data?.currentTurn,
       }));
     };
+    
 
     const getWinnerHandler = (data) => {
       toast?.success(`${data?.winner?.name} wins`);
@@ -86,15 +87,32 @@ export default function Board() {
       dispatch(setIsPlaying(false))
     };
 
-     
+    const hendleMatchDraw = (data)=>{
+       toast?.success(`Match Draw`);
+      dispatch(setOponentPlayer(""))
+      setRoom({
+        board: [
+          ["", "", ""],
+          ["", "", ""],
+          ["", "", ""],
+        ],
+        player1: { name: "", avatar: "", symbol: "" },
+        player2: { name: "", avatar: "", symbol: "" },
+        currentTurn: "",
+        winner: "",
+      });
+      dispatch(setIsPlaying(false))
+    }     
 
     socket.on("ACCEPT_FRIEND_REQUEST", handleRoom);
     socket.on("PLAYER_MOVE", handlePlayerMove);
     socket.on("GET_WINNER", getWinnerHandler);
+    socket.on("MATCH_DRAW",hendleMatchDraw)
     return () => {
       socket.off("ACCEPT_FRIEND_REQUEST", handleRoom);
       socket.off("PLAYER_MOVE", handlePlayerMove);
       socket.off("GET_WINNER", getWinnerHandler);
+       socket.off("MATCH_DRAW", hendleMatchDraw); 
     };
   }, [socket, userName]);
 
