@@ -161,7 +161,6 @@ export default function Board() {
       <Box
         sx={{
           color: "white",
-          height: "100vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -182,7 +181,7 @@ export default function Board() {
         <Box
           sx={{
             width: "100%",
-            height: "93vh",
+            height: "86vh",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",

@@ -13,7 +13,8 @@ function Home() {
   
   return (
     <div
-      style={{ backgroundColor: "black", height: "100vh", overflow: "auto" , scrollbarWidth: "none" }}
+      style={{ 
+            backgroundColor: "#24201f", height: "100vh", overflow: "auto" , scrollbarWidth: "none" }}
     >
       <Header />
       <Board />
