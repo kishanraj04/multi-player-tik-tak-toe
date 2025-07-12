@@ -11,15 +11,18 @@ import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import { GlobalContext } from "../../context/GlobalContext";
 import { getSocket } from "../../context/SocketProvider";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { incNewMessageCount } from "../../store/userSlice";
 
 export default function RightDrawar() {
-  const { isRightDrawar, setIsRightDrawar } = React.useContext(GlobalContext);
+  const { isRightDrawar, setIsRightDrawar, messages, setMessages } =
+    React.useContext(GlobalContext);
   const { socket } = getSocket();
-  const { oponentPlayer, userName,isPlaying } = useSelector((state) => state?.loginUser);
-
-  const [messages, setMessages] = React.useState([]);
+  const { oponentPlayer, userName, isPlaying } = useSelector(
+    (state) => state?.loginUser
+  );
+  const dispatch = useDispatch();
   const inputRef = React.useRef(null);
   const scrollBoxRef = React.useRef(null);
 
@@ -32,10 +35,11 @@ export default function RightDrawar() {
 
   // Listen only for RECEIVED_MESSAGE
   React.useEffect(() => {
-
-    if(!socket) return 
+    if (!socket) return;
     const handleReceivedMessage = (data) => {
       setMessages((prev) => [...prev, data?.data]);
+
+      dispatch(incNewMessageCount());
     };
 
     socket.on("RECEIVED_MESSAGE", handleReceivedMessage);
@@ -45,24 +49,30 @@ export default function RightDrawar() {
     };
   }, [socket]);
 
-  const handleSendMessage = () => {
+ const handleSendMessage = () => {
+  if (!oponentPlayer) {
+    toast.error("You Are Not In Game");
+    return;
+  }
+  const value = inputRef.current?.value?.trim();
+  if (!value) return;
 
-    if(!oponentPlayer){
-      toast.error("You Are Not In Game")
-      return;
-    }
-    const value = inputRef.current?.value?.trim();
-    if (!value) return;
-
-    const newMessage = {
-      sender: userName,
-      receiver: oponentPlayer?.name,
-      msg: value,
-    };
-
-    socket.emit("SEND_MSG", newMessage);
-    inputRef.current.value = ""; // Clear input field
+  const newMessage = {
+    sender: userName,
+    receiver: oponentPlayer?.name,
+    msg: value,
   };
+
+  // Send to server
+  socket.emit("SEND_MSG", newMessage);
+
+  // Show message instantly in chat
+  setMessages((prev) => [...prev, newMessage]);
+
+  // Clear input
+  inputRef.current.value = "";
+};
+
 
   return (
     <Drawer
@@ -82,11 +92,20 @@ export default function RightDrawar() {
         }}
       >
         {/* Close Button */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end" ,scrollbarWidth: "none", 
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            scrollbarWidth: "none",
             "&::-webkit-scrollbar": {
               display: "none", // Chrome, Safari
-            },}}>
-          <IconButton onClick={() => setIsRightDrawar(false)} sx={{ color: "white" }}>
+            },
+          }}
+        >
+          <IconButton
+            onClick={() => setIsRightDrawar(false)}
+            sx={{ color: "white" }}
+          >
             <CloseIcon />
           </IconButton>
         </Box>
@@ -100,9 +119,9 @@ export default function RightDrawar() {
             my: 2,
             px: 1,
             display: "flex",
-            flexDirection: "column-reverse", 
+            flexDirection: "column-reverse",
             gap: 1,
-            scrollbarWidth: "none", 
+            scrollbarWidth: "none",
             "&::-webkit-scrollbar": {
               display: "none", // Chrome, Safari
             },
@@ -139,7 +158,11 @@ export default function RightDrawar() {
               sx: { backgroundColor: "white", borderRadius: 1 },
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton edge="end" color="primary" onClick={handleSendMessage}>
+                  <IconButton
+                    edge="end"
+                    color="primary"
+                    onClick={handleSendMessage}
+                  >
                     <SendIcon />
                   </IconButton>
                 </InputAdornment>

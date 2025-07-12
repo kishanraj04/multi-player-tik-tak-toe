@@ -5,6 +5,8 @@ import { getSocket } from "../../context/SocketProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { setIsPlaying, setOponentPlayer } from "../../store/userSlice";
+import { useContext } from "react";
+import { GlobalContext } from "../../context/GlobalContext";
 
 const Cell = styled(Box)(({ theme }) => ({
   width: "100px",
@@ -33,7 +35,7 @@ export default function Board() {
     winner: "",
   });
   const [playerRole, setPlayerRole] = useState("");
-
+  const {setMessages} = useContext(GlobalContext)
   const { socket } = getSocket();
   const dispatch = useDispatch();
   const { userName } = useSelector((state) => state?.loginUser);
@@ -84,6 +86,7 @@ export default function Board() {
         currentTurn: "",
         winner: "",
       });
+      setMessages([])
       dispatch(setIsPlaying(false))
     };
 
@@ -102,6 +105,7 @@ export default function Board() {
         winner: "",
       });
       dispatch(setIsPlaying(false))
+       setMessages([])
     }     
 
     socket.on("ACCEPT_FRIEND_REQUEST", handleRoom);

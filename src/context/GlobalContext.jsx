@@ -17,8 +17,9 @@ export function GlobalProvider({ children }) {
   const [isRightDrawar,setIsRightDrawar] = useState(false)
   const [isNotification,setIsNotification] = useState(false)
   const [searchUserName, setSearchUserName] = useState("");
+  const [messages, setMessages] =useState([]);
   return (
-    <GlobalContext.Provider value={{ board, setBoard,isSearchUser,setIsSearchUser,isDrawar,setIsDrawar,isRightDrawar,setIsRightDrawar,isNotification,setIsNotification,searchUserName, setSearchUserName}}>
+    <GlobalContext.Provider value={{ board, setBoard,isSearchUser,setIsSearchUser,isDrawar,setIsDrawar,isRightDrawar,setIsRightDrawar,isNotification,setIsNotification,searchUserName, setSearchUserName,messages, setMessages}}>
       {children}
     </GlobalContext.Provider>
   );

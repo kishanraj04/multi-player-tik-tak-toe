@@ -20,8 +20,9 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { GlobalContext } from "../../context/GlobalContext";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLazySearchUserQuery } from "../../api/Api";
+import { setNewMessageCountZero } from "../../store/userSlice";
 // Search bar container
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -65,8 +66,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const { newMessageCount } = useSelector((state) => state.loginUser);
   const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);
-
+  const dispatch = useDispatch()
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileAnchorEl);
   const navigate = useNavigate();
@@ -81,6 +83,7 @@ export default function Header() {
     setIsNotification,
     searchUserName,
     setSearchUserName,
+    messages,
   } = React.useContext(GlobalContext);
 
   const { name, avatar, friendRequest } = useSelector(
@@ -142,11 +145,12 @@ export default function Header() {
     >
       <MenuItem>
         <IconButton size="large" color="inherit">
-          <Badge badgeContent={4} color="error">
+          <Badge badgeContent={newMessageCount} color="error">
             <MailIcon
               onClick={() => {
                 handleMobileMenuClose();
                 setIsRightDrawar(!isRightDrawar);
+                dispatch(setNewMessageCountZero())
               }}
             />
           </Badge>
@@ -155,6 +159,7 @@ export default function Header() {
           onClick={() => {
             handleMobileMenuClose();
             setIsRightDrawar(!isRightDrawar);
+            dispatch(setNewMessageCountZero())
           }}
         >
           Messages
@@ -238,8 +243,13 @@ export default function Header() {
                 setIsRightDrawar(!isRightDrawar);
               }}
             >
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
+              <Badge
+                badgeContent={newMessageCount}
+                color="error"
+              >
+                <MailIcon onClick={()=>{
+                  dispatch(setNewMessageCountZero())
+                }}/>
               </Badge>
             </IconButton>
             <IconButton
