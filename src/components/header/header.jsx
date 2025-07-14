@@ -17,12 +17,14 @@ import { GlobalContext } from "../../context/GlobalContext";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setNewMessageCountZero } from "../../store/userSlice";
+import { toast } from "react-toastify";
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {isPlaying} = useSelector((state)=>state.loginUser)
 
   const {
     isDrawar,
@@ -36,7 +38,7 @@ export default function Header() {
   const { name, avatar, friendRequest, newMessageCount } = useSelector(
     (state) => state.loginUser
   );
-
+  // console.log(friendRequest);
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -56,7 +58,8 @@ export default function Header() {
       <MenuItem
         onClick={() => {
           handleMenuClose();
-          navigate("/profile");
+          if(!isPlaying) navigate("/profile");
+          else toast.error("you are in the game")
         }}
       >
         Profile
@@ -64,7 +67,8 @@ export default function Header() {
       <MenuItem
         onClick={() => {
           handleMenuClose();
-          navigate("/myaccount");
+          if(!isPlaying) navigate("/myaccount");
+          else toast.error("you are in the game")
         }}
       >
         My Account

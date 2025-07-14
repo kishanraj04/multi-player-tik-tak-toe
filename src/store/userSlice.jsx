@@ -7,7 +7,9 @@ const initialState = {
   friendRequest: [],
   isPlaying:false,
   oponentPlayer:"",
-  newMessageCount:0
+  newMessageCount:0,
+  isPlayerRequested:false,
+  currentPlayingUsers:[]
 };
 
 const userSlice = createSlice({
@@ -43,10 +45,16 @@ const userSlice = createSlice({
     },
     setNewMessageCountZero:(state,action)=>{
       state.newMessageCount = 0;
+    },
+    setIsPlayerRequested:(state,action)=>{
+      state.isPlayerRequested = action.payload
+    },
+    setCurrentPlayingUser:(state,action)=>{
+      state.currentPlayingUsers = action.payload
     }
   },
 });
 
-export const { setLoginUser, setToken, setFriendRequest ,setIsPlaying,setFriendReqEmpty,setOponentPlayer,incNewMessageCount,setNewMessageCountZero} = userSlice?.actions;
+export const { setLoginUser, setToken, setFriendRequest ,setIsPlaying,setFriendReqEmpty,setOponentPlayer,incNewMessageCount,setNewMessageCountZero,setIsPlayerRequested,setCurrentPlayingUser} = userSlice?.actions;
 
 export default userSlice?.reducer;

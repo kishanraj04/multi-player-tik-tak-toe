@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { getSocket } from "../../context/SocketProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { setIsPlaying, setOponentPlayer } from "../../store/userSlice";
-import { useContext } from "react";
+import { setCurrentPlayingUser, setIsPlayerRequested, setIsPlaying, setOponentPlayer } from "../../store/userSlice";
 import { GlobalContext } from "../../context/GlobalContext";
+import Loader from "../loader/Loader";
+import { useNavigationBlocker } from "../../hook/BlockNavigate";
 
-const Cell = styled(Box)(({ theme }) => ({
+// Styled game cell
+const Cell = styled(Box)(() => ({
   width: "100px",
   height: "100px",
   border: "2px solid #000",
@@ -24,116 +26,104 @@ const Cell = styled(Box)(({ theme }) => ({
 
 export default function Board() {
   const [room, setRoom] = useState({
-    board: [
-      ["", "", ""],
-      ["", "", ""],
-      ["", "", ""],
-    ],
+    board: [["", "", ""], ["", "", ""], ["", "", ""]],
     player1: { name: "", avatar: "", symbol: "" },
     player2: { name: "", avatar: "", symbol: "" },
     currentTurn: "",
     winner: "",
   });
-  const [playerRole, setPlayerRole] = useState("");
-  const {setMessages} = useContext(GlobalContext)
-  const { socket } = getSocket();
-  const dispatch = useDispatch();
-  const { userName } = useSelector((state) => state?.loginUser);
 
+  const [playerRole, setPlayerRole] = useState("");
+  const [isGameStarted, setIsGameStarted] = useState(false);
+
+  const dispatch = useDispatch();
+  const { setMessages } = useContext(GlobalContext);
+  const { userName, isPlayerRequested ,isPlaying} = useSelector((state) => state.loginUser);
+  const { socket } = getSocket();
+
+  useNavigationBlocker(isGameStarted); // ✅ Prevent navigation once game starts
+
+  // Game state updates from server
   useEffect(() => {
     if (!socket) return;
 
     const handleRoom = (data) => {
-      const oponentPlayer = data?.player1?.name==userName?data?.player2:data?.player1
+      const oponentPlayer = data.player1.name === userName ? data.player2 : data.player1;
+
       setRoom({
-        board: data?.board || [
-          ["", "", ""],
-          ["", "", ""],
-          ["", "", ""],
-        ],
-        player1: data?.player1,
-        player2: data?.player2,
-        currentTurn: data?.currentTurn,
+        board: data.board || [["", "", ""], ["", "", ""], ["", "", ""]],
+        player1: data.player1,
+        player2: data.player2,
+        currentTurn: data.currentTurn,
         winner: "",
       });
 
-      dispatch(setOponentPlayer(oponentPlayer))
-      // Determine player's role
-      if (data?.player1?.name === userName) setPlayerRole("player1");
-      else if (data?.player2?.name === userName) setPlayerRole("player2");
+      dispatch(setOponentPlayer(oponentPlayer));
+      dispatch(setIsPlayerRequested(false));
+      setIsGameStarted(true); // ✅ Lock game
+      setPlayerRole(data.player1.name === userName ? "player1" : "player2");
     };
 
     const handlePlayerMove = (data) => {
       setRoom((prev) => ({
         ...prev,
-        board: data?.board,
-        currentTurn: data?.currentTurn,
+        board: data.board,
+        currentTurn: data.currentTurn,
       }));
     };
-    
 
     const getWinnerHandler = (data) => {
-      toast?.success(`${data?.winner?.name} wins`);
-      dispatch(setOponentPlayer(""))
-      setRoom({
-        board: [
-          ["", "", ""],
-          ["", "", ""],
-          ["", "", ""],
-        ],
-        player1: { name: "", avatar: "", symbol: "" },
-        player2: { name: "", avatar: "", symbol: "" },
-        currentTurn: "",
-        winner: "",
-      });
-      setMessages([])
-      dispatch(setIsPlaying(false))
+      toast.success(`${data.winner.name} wins`);
+      dispatch(setOponentPlayer(""));
+      resetGame();
     };
 
-    const hendleMatchDraw = (data)=>{
-       toast?.success(`Match Draw`);
-      dispatch(setOponentPlayer(""))
+    const handleMatchDraw = () => {
+      toast.success("Match Draw");
+      dispatch(setOponentPlayer(""));
+      resetGame();
+    };
+
+    const resetGame = () => {
       setRoom({
-        board: [
-          ["", "", ""],
-          ["", "", ""],
-          ["", "", ""],
-        ],
+        board: [["", "", ""], ["", "", ""], ["", "", ""]],
         player1: { name: "", avatar: "", symbol: "" },
         player2: { name: "", avatar: "", symbol: "" },
         currentTurn: "",
         winner: "",
       });
-      dispatch(setIsPlaying(false))
-       setMessages([])
-    }     
+      setMessages([]);
+      dispatch(setIsPlaying(false));
+      setIsGameStarted(false); // ✅ Unlock navigation
+    };
+
+    const handleCurrentPlayingUsers = (currentPlayingUsers)=>{
+      dispatch(setCurrentPlayingUser(currentPlayingUsers?.currentPlayingUser))
+    }
 
     socket.on("ACCEPT_FRIEND_REQUEST", handleRoom);
     socket.on("PLAYER_MOVE", handlePlayerMove);
     socket.on("GET_WINNER", getWinnerHandler);
-    socket.on("MATCH_DRAW",hendleMatchDraw)
+    socket.on("MATCH_DRAW", handleMatchDraw);
+    socket.on("CURRENT_PLAYERS",handleCurrentPlayingUsers)
     return () => {
       socket.off("ACCEPT_FRIEND_REQUEST", handleRoom);
       socket.off("PLAYER_MOVE", handlePlayerMove);
       socket.off("GET_WINNER", getWinnerHandler);
-       socket.off("MATCH_DRAW", hendleMatchDraw); 
+      socket.off("MATCH_DRAW", handleMatchDraw);
     };
   }, [socket, userName]);
 
- 
-
+  // User move
   const handleBoardClick = (i, j) => {
     const board = room.board;
     if (board[i][j] !== "" || room.winner !== "") return;
     if (room.currentTurn !== playerRole) {
-      toast.error("Not You Chance");
+      toast.error("Not your turn");
       return;
     }
 
-    const symbol =
-      room.currentTurn === "player1"
-        ? room.player1.symbol
-        : room.player2.symbol;
+    const symbol = room.currentTurn === "player1" ? room.player1.symbol : room.player2.symbol;
 
     const updatedBoard = board.map((row, i1) =>
       row.map((cell, j1) => (i1 === i && j1 === j ? symbol : cell))
@@ -155,7 +145,6 @@ export default function Board() {
     });
   };
 
-  
   if (!socket) {
     return (
       <Box
@@ -164,10 +153,7 @@ export default function Board() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          scrollbarWidth: "none", 
-            "&::-webkit-scrollbar": {
-              display: "none", // Chrome, Safari
-            },
+          height: "100%",
         }}
       >
         Connecting to game server...
@@ -177,7 +163,7 @@ export default function Board() {
 
   return (
     <>
-      {room?.currentTurn ? (
+      {room.currentTurn ? (
         <Box
           sx={{
             width: "100%",
@@ -189,25 +175,10 @@ export default function Board() {
             flexDirection: "column",
             gap: 3,
             pt: 4,
-            scrollbarWidth: "none", 
-            "&::-webkit-scrollbar": {
-              display: "none", // Chrome, Safari
-            },
           }}
         >
           {/* Player Info */}
-          <Box
-            sx={{
-              display: "flex",
-              gap: 4,
-              justifyContent: "center",
-              alignItems: "center",
-              scrollbarWidth: "none", 
-            "&::-webkit-scrollbar": {
-              display: "none", // Chrome, Safari
-            },
-            }}
-          >
+          <Box sx={{ display: "flex", gap: 4 }}>
             {["player1", "player2"].map((pKey) => {
               const isCurrent = room.currentTurn === pKey;
               return (
@@ -222,10 +193,6 @@ export default function Board() {
                     py: 1,
                     borderRadius: "10px",
                     boxShadow: isCurrent ? "0 0 10px #fdd835" : "none",
-                    scrollbarWidth: "none", 
-            "&::-webkit-scrollbar": {
-              display: "none", // Chrome, Safari
-            },
                   }}
                 >
                   <Avatar src={room[pKey].avatar} alt={room[pKey].name} />
@@ -238,17 +205,11 @@ export default function Board() {
           </Box>
 
           {/* Game Board */}
-          <Box sx={{scrollbarWidth: "none", 
-            "&::-webkit-scrollbar": {
-              display: "none", // Chrome, Safari
-            },}}>
+          <Box>
             {room.board.map((row, i) => (
               <Box key={i} sx={{ display: "flex" }}>
                 {row.map((val, j) => (
-                  <Cell
-                    key={`${i}-${j}`}
-                    onClick={() => handleBoardClick(i, j)}
-                  >
+                  <Cell key={`${i}-${j}`} onClick={() => handleBoardClick(i, j)}>
                     {val}
                   </Cell>
                 ))}
@@ -263,13 +224,15 @@ export default function Board() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            scrollbarWidth: "none", 
-            "&::-webkit-scrollbar": {
-              display: "none", // Chrome, Safari
-            },
           }}
         >
-          <Typography sx={{ color: "white" }}>Request Player</Typography>
+          {!isPlayerRequested ? (
+            <Typography sx={{ color: "white" }} variant="h5">
+              Request Player To Join
+            </Typography>
+          ) : (
+            <Loader />
+          )}
         </Box>
       )}
     </>

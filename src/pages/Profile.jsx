@@ -19,25 +19,34 @@ import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
+import { useGetMyProfileQuery } from "../api/Api";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const {data} = useGetMyProfileQuery(undefined,{refetchOnMountOrArgChange:true})
+  
+  if (!data) {
+  return (
+    <Box
+      sx={{
+        height: "100vh",
+        width: "100%",
+        bgcolor: "#1e1e1e",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "white",
+      }}
+    >
+      Loading profile...
+    </Box>
+  );
+}
 
-  const user = {
-    name: "Kishu",
-    avatar: "/avatar/kishu.png",
-    totalGames: 12,
-    wins: 7,
-    losses: 5,
-    history: [
-      { opponent: "Aman", opponentAvatar: "/avatar/aman.png", result: "Win", date: "2025-07-11" },
-      { opponent: "Ravi", opponentAvatar: "/avatar/ravi.png", result: "Lose", date: "2025-07-10" },
-      { opponent: "Pooja", opponentAvatar: "/avatar/pooja.png", result: "Win", date: "2025-07-09" },
-    ],
-  };
+const { name, avatar, totalGames, wins, losses, history = [] } = data;
 
-  const { name, avatar, totalGames, wins, losses, history = [] } = user;
+
 
   const filteredHistory = history.filter((match) =>
     match.opponent.toLowerCase().includes(search.toLowerCase())
@@ -52,9 +61,12 @@ const Profile = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        overflow:"auto",
+        scrollbarWidth:"none"
       }}
     >
-      <Box sx={{ width: "100%",width:"90%", height: "90%" }}>
+      <Box sx={{ width: "100%",width:"90%", height: "90%" ,overflow:"auto",
+        scrollbarWidth:"none"}}>
         <Card
           sx={{
             height: "100%",
@@ -139,7 +151,7 @@ const Profile = () => {
             <Typography variant="h6">Match History</Typography>
           </Box>
 
-          <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
+          <Box sx={{ flexGrow: 1, overflowY: "auto", scrollbarWidth:"none"}}>
             <List dense>
               {filteredHistory.length === 0 ? (
                 <Typography variant="body2" color="gray">
@@ -158,7 +170,7 @@ const Profile = () => {
                       />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={`vs ${match.opponent}`}
+                      primary={`${name} vs ${match.opponent}`}
                       secondary={`Result: ${match.result} | Date: ${match.date}`}
                       secondaryTypographyProps={{ color: "gray" }}
                     />

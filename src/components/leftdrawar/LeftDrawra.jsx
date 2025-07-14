@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import {
   setFriendReqEmpty,
   setFriendRequest,
+  setIsPlayerRequested,
   setIsPlaying,
 } from "../../store/userSlice";
 
@@ -147,6 +148,7 @@ export default function LeftDrawra() {
                       toast.error("You Are In Game");
                       return;
                     }
+                    dispatch(setIsPlayerRequested(true))
                     socket.emit("FRIEND_REQUEST", { name, avatar, socketId });
                     toast.success("Request Send");
                   }}
