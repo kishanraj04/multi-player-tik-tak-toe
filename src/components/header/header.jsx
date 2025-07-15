@@ -35,7 +35,7 @@ export default function Header() {
     setIsNotification,
   } = React.useContext(GlobalContext);
 
-  const { name, avatar, friendRequest, newMessageCount } = useSelector(
+  const { name, avatar, friendRequest, newMessageCount,currentPlayingUser} = useSelector(
     (state) => state.loginUser
   );
   // console.log(friendRequest);
@@ -109,7 +109,7 @@ export default function Header() {
             color="inherit"
             onClick={() => setIsNotification(!isNotification)}
           >
-            <Badge badgeContent={friendRequest?.length} color="error">
+            <Badge badgeContent={currentPlayingUser?.length == 0 ? 0 :friendRequest?.length} color="error">
               <NotificationsIcon />
             </Badge>
           </IconButton>

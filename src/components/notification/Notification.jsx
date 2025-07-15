@@ -57,7 +57,7 @@ export default function Notification() {
   const handleReject = (name) => {
     console.log(`Rejected ${name}`);
   };
-
+  console.log(friendRequest);
   return (
     <Modal
       aria-labelledby="notification-modal-title"
@@ -90,9 +90,7 @@ export default function Notification() {
                 </Stack>
 
                 <Stack direction="row" spacing={1}>
-                  {currentPlayingUsers?.some(
-                    (u) => u?.userId?.toString() === user?.userId?.toString()
-                  ) ? (
+                  {currentPlayingUsers?.includes(user?._id) ? (
                     <Button
                       variant="contained"
                       color="error"
@@ -109,13 +107,13 @@ export default function Notification() {
                     </Button>
                   )}
 
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     color="error"
                     onClick={() => handleReject(user?.name)}
                   >
                     Reject
-                  </Button>
+                  </Button> */}
                 </Stack>
               </Stack>
               {index < friendRequest?.length - 1 && <Divider />}

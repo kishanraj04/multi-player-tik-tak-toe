@@ -35,8 +35,8 @@ export const apiSlice = createApi({
       })
     }),
     getMyProfile:builder.query({
-      query:()=>({
-        url:"/getprofile",
+      query:(page)=>({
+        url:`/getprofile?page=${page}`,
         credentials:"include",
         method:"GET"
       })
@@ -45,7 +45,7 @@ export const apiSlice = createApi({
 });
 
 // Export the auto-generated hook
-export const { useSignUpUserMutation,useLoginUserMutation,useDirectLoginQuery,useLazySearchUserQuery,useGetMyProfileQuery} = apiSlice;
+export const { useSignUpUserMutation,useLoginUserMutation,useDirectLoginQuery,useLazySearchUserQuery,useLazyGetMyProfileQuery} = apiSlice;
 
 // Export the reducer separately (for store setup)
 export const userRed = apiSlice.reducer;

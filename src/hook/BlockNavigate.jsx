@@ -1,5 +1,6 @@
 // src/hook/BlockNavigate.js
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export const useNavigationBlocker = (shouldBlock) => {
   useEffect(() => {
@@ -12,7 +13,7 @@ export const useNavigationBlocker = (shouldBlock) => {
 
     const handlePopState = (e) => {
       e.preventDefault();
-      alert("Game in progress! You can't go back.");
+      toast.error("If You Refresh Than U Loose")
       window.history.pushState(null, "", window.location.href);
     };
 
