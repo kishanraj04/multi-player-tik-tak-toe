@@ -1,12 +1,69 @@
-# React + Vite
+# 🎮 Real-Time Multiplayer Tic Tac Toe Game
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack real-time **Multiplayer Tic Tac Toe** game where users can:
+- Authenticate via signup/login
+- View and challenge active users
+- Accept/decline game requests
+- Play a real-time Tic Tac Toe game
+- Chat live during the match
+- Track Win/Loss/Draw in their profile
+- See match result at game end
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠 Tech Stack
 
-## Expanding the ESLint configuration
+### 🔹 Frontend
+- **React 19**
+- **Material UI (MUI)**
+- **Redux Toolkit**
+- **Socket.IO Client**
+- **React Router v7**
+- **Toast Notifications (React Toastify)**
+- **Emoji Picker (emoji-mart)**
+- **Vite** for blazing fast dev server
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 🔹 Backend
+- **Node.js + Express 5**
+- **Socket.IO** for WebSocket support
+- **MongoDB + Mongoose** for database
+- **JWT** for secure login
+- **Bcrypt** for password hashing
+- **Multer + Cloudinary** (optional: for profile image uploads)
+- **CORS, Cookie-parser, dotenv, moment**
+
+---
+
+## ✅ Features
+
+### 🔐 Authentication
+- Register/Login with hashed passwords
+- JWT for secure sessions
+- Cookies to persist login
+
+### 👥 Active Players & Matchmaking
+- View online users
+- Send/receive game requests
+- Accept or decline challenge
+- Only one request accepted at a time
+
+### 🎮 Real-time Game Logic
+- Game begins only when request is accepted
+- Synchronized 3x3 board using Socket.IO
+- Show turns and disable board when not your turn
+- Detect **Win**, **Loss**, **Draw**
+
+### 📊 Profile & Stats
+- View user profile with:
+  - Avatar and name
+  - Total games played
+  - Wins, losses, draws
+- Game stats updated after each match
+
+### 💬 In-Game Chat
+- Realtime messaging between players during game
+- Supports emojis
+- Optional: draggable/resizable chat box
+- Chat cleared after match ends
+
+
